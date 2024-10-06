@@ -1,0 +1,1 @@
+in slow fast method at end if fast!=NULL then length is odd otherwise even!!
