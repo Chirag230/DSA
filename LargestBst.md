@@ -1,46 +1,24 @@
-    class MinMax 
-    {
-        public:
-        int min;
-        int max;
-        bool isBST;
-        int size;
-    
-        MinMax() 
-        {
-            min = INT_MAX;
-            max = INT_MIN;
-            isBST = true;
-            size = 0;
-        }
-    };
-    
-    MinMax findLargestBST(Node* root) 
-    {
-        if (root == nullptr) 
-        {
-            return MinMax();
-        }
-    
-        MinMax leftMinMax = findLargestBST(root->left);
-        MinMax rightMinMax = findLargestBST(root->right);
-    
-        MinMax m;
-    
-        if (!leftMinMax.isBST || !rightMinMax.isBST || leftMinMax.max >= root->data || rightMinMax.min <= root->data) {
-            m.isBST = false;
-            m.size = max(leftMinMax.size, rightMinMax.size);
-            return m;
-        }
-    
-        m.isBST = true;
-        m.size = leftMinMax.size + rightMinMax.size + 1;
-        m.min = root->left ? leftMinMax.min : root->data;
-        m.max = root->right ? rightMinMax.max : root->data;
-    
-        return m;
+bool isdataidBST(Node* root, int mindata, int maxdata) {
+        if (root == nullptr) return true;
+        if (root->data >= maxdata || root->data <= mindata) return false;
+        return isdataidBST(root->left, mindata, root->data) &&
+               isdataidBST(root->right, root->data, maxdata);
     }
-    
-    int largestBst(Node* root) {
-        return findLargestBST(root).size;
+     int countNodes(Node* root) {
+        if (root == nullptr) return 0;
+        return 1 + countNodes(root->left) + countNodes(root->right);
+    }
+    int largestBst(Node *root)
+    {
+    	if (root == nullptr) return 0;
+        if (isdataidBST(root, INT_MIN, INT_MAX)) {
+            // If the current node is a dataid BST,
+            // return the size of the entire subtree
+            return countNodes(root);
+        } else {
+            // If not, explore left and right subtrees
+            int left = largestBst(root->left);
+            int right = largestBst(root->right);
+            return max(left, right);
+        }
     }
